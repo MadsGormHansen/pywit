@@ -29,14 +29,6 @@ page = Page(os.environ["PAGE_ACCESS_TOKEN"])
 
 app = Flask(__name__)
 
-# Wit.ai parameters
-WIT_TOKEN = os.environ.get('WIT_TOKEN')
-# Messenger API parameters
-PAGE_ACCESS_TOKEN = os.environ.get('PAGE_ACCESS_TOKEN')
-# A user secret to verify webhook get request.
-VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
-
-
 
 @app.route('/', methods=['GET'])
 def verify():
