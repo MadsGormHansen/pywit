@@ -56,7 +56,7 @@ def validate_actions(logger, actions):
     return actions
 
 class Wit(object):
-    access_token = None
+    access_token = '6OXUG5YGKZDDMMGJRK2JEGKRJIFNCLOQ'
     actions = {}
     _sessions = {}
 
