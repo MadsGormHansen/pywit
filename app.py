@@ -19,8 +19,8 @@
 
 import os
 import requests
+import wit import *
 from sys import argv
-import wit
 from bottle import Bottle, request, debug
 from flask import Flask, request
 from models import *
@@ -28,7 +28,6 @@ from models import *
 page = Page(os.environ["PAGE_ACCESS_TOKEN"])
 
 app = Flask(__name__)
-
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -46,7 +45,7 @@ def verify():
 def webhook():
   page.handle_webhook(request.get_data(as_text=True))
   return "ok"
-
+'''
 
 # Facebook Messenger GET Webhook
 @app.get('/webhook')
@@ -157,4 +156,4 @@ client = Wit(access_token=WIT_TOKEN, actions=actions)
 
 if __name__ == '__main__':
     # Run Server
-    app.run(host='0.0.0.0', port=argv[1])
+    app.run(host='0.0.0.0', port=argv[1])'''
