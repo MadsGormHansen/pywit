@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding:utf-8
+# -*- coding: utf-8 -*-
 
 # Messenger API integration example
 # We assume you have:
@@ -11,8 +11,8 @@
 # 2. You can run this example on a cloud service provider like Heroku, Google Cloud Platform or AWS.
 #    Note that webhooks must have a valid SSL certificate, signed by a certificate authority and won't work on your localhost.
 # 3. Set your environment variables e.g. WIT_TOKEN=your_wit_token
-#                                        FB_PAGE_TOKEN=your_page_token
-#                                        FB_VERIFY_TOKEN=your_verify_token
+#                                        PAGE_ACCESS_TOKEN=your_page_token
+#                                        VERIFY_TOKEN=your_verify_token
 # 4. Run your server e.g. python examples/messenger.py {PORT}
 # 5. Subscribe your page to the Webhooks using verify_token and `https://<your_host>/webhook` as callback URL.
 # 6. Talk to your bot on Messenger!
@@ -22,6 +22,11 @@ import requests
 from sys import argv
 from wit import Wit
 from bottle import Bottle, request, debug
+from models import *
+
+page = Page(os.environ["PAGE_ACCESS_TOKEN"])
+
+app = Flask(__name__)
 
 # Wit.ai parameters
 WIT_TOKEN = os.environ.get('6OXUG5YGKZDDMMGJRK2JEGKRJIFNCLOQ')
@@ -30,9 +35,24 @@ PAGE_ACCESS_TOKEN = os.environ.get('EAAVV5BvwgnoBAHoYjL7wyIAVYARHbCuAKJFxZCcDt0y
 # A user secret to verify webhook get request.
 VERIFY_TOKEN = os.environ.get('Token_2')
 
-# Setup Bottle Server
-debug(True)
-app = Bottle()
+
+
+@app.route('/', methods=['GET'])
+def verify():
+    # when the endpoint is registered as a webhook, it must echo back
+    # the 'hub.challenge' value it receives in the query arguments
+    if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
+        if not request.args.get("hub.verify_token") == os.environ["VERIFY_TOKEN"]:
+            return "Verification token mismatch", 403
+        return request.args["hub.challenge"], 200
+    
+    return "Hello world", 200
+
+
+@app.route('/', methods=['POST'])
+def webhook():
+  page.handle_webhook(request.get_data(as_text=True))
+  return "ok"
 
 
 # Facebook Messenger GET Webhook
@@ -43,7 +63,7 @@ def messenger_webhook():
     """
     verify_token = request.query.get('hub.verify_token')
     # check whether the verify tokens match
-    if verify_token == FB_VERIFY_TOKEN:
+    if verify_token == VERIFY_TOKEN:
         # respond with the challenge to confirm
         challenge = request.query.get('hub.challenge')
         return challenge
@@ -88,7 +108,7 @@ def fb_message(sender_id, text):
         'message': {'text': text}
     }
     # Setup the query string with your PAGE TOKEN
-    qs = 'access_token=' + FB_PAGE_TOKEN
+    qs = 'access_token=' + PAGE_ACCESS_TOKEN
     # Send POST request to messenger
     resp = requests.post('https://graph.facebook.com/me/messages?' + qs,
                          json=data)
