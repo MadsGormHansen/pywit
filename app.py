@@ -19,7 +19,7 @@
 
 import os
 import requests
-import wit import *
+#import wit import *
 from sys import argv
 from bottle import Bottle, request, debug
 from flask import Flask, request
