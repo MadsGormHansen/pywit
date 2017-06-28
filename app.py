@@ -22,6 +22,7 @@ import requests
 from sys import argv
 from wit import Wit
 from bottle import Bottle, request, debug
+from flask import Flask, request
 from models import *
 
 page = Page(os.environ["PAGE_ACCESS_TOKEN"])
@@ -29,11 +30,11 @@ page = Page(os.environ["PAGE_ACCESS_TOKEN"])
 app = Flask(__name__)
 
 # Wit.ai parameters
-WIT_TOKEN = os.environ.get('6OXUG5YGKZDDMMGJRK2JEGKRJIFNCLOQ')
+WIT_TOKEN = os.environ.get('WIT_TOKEN')
 # Messenger API parameters
-PAGE_ACCESS_TOKEN = os.environ.get('EAAVV5BvwgnoBAHoYjL7wyIAVYARHbCuAKJFxZCcDt0yXmOm9NiSxu892T3O0swyFevZBjM84ZAKJDkxwZBqap1IwOynAcw2cKbbKX3ZBIgiJbiBbG2zuyiHbsdbmHIZC7Kb5LwYGPT47ErU8qMoHZCvidujESGVR4DpZBh7gQN2qzAZDZD')
+PAGE_ACCESS_TOKEN = os.environ.get('PAGE_ACCESS_TOKEN')
 # A user secret to verify webhook get request.
-VERIFY_TOKEN = os.environ.get('Token_2')
+VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 
 
 
