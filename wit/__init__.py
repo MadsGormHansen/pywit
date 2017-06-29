@@ -1,4 +1,4 @@
-from wit import Wit
+from wit import *
 
 import sys
 import logging
